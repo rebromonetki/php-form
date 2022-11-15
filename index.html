@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/style.css">
+    <title>Document</title>
+</head>
+<body>
+    <form action="phpmail.php" method="POST"> <!-- файл с кодом php -->
+        <select name="subject">
+            <option disabled selected>Чем хотите поделиться?</option>
+            <option value="1">Поделиться анекдотом</option>
+            <option value="2">Поделиться зарплатой</option>
+            <option value="3">Поделиться на ноль</option>  
+        </select>
+        <input type="email" name="email" placeholder="Введите Ваш email" maxlength="50" required>
+        <textarea name="message" placeholder="Введите сообщение" maxlength="150" required></textarea>
+        <img src="phpcapcha.png">
+        <input type="number" name="capcha" placeholder="Введите ответ" maxlength="3" required>
+        <input type="submit" value="Лети, письмо!">
+    </form>
+</body>
+</html>
+
+<!-- ниже идёт код файла css /style.css 
+
+input, textarea, select {
+    box-sizing: border-box;
+    display: block;
+    width: 200px;
+    height: 30px;
+    margin-bottom: 15px;
+      
+}
+
+textarea {
+    height: 100px;
+    resize: none;
+}
+
+конец кода-->
+
+<!-- ниже идёт код файла /phpmail.php. 
+Перед началом добавьте '< ? php' без кавычек и пробелов 
+
+
+
+   if($_POST['capcha'] != 17) {
+    header('location: index.php');
+    exit;
+   }
+   
+   if($_POST['subject'] == 1) {
+     $subject = 'Поделиться анекдотом';
+   } elseif($_POST['subject'] == 2) {
+     $subject = 'Поделиться зарплатой';
+   } elseif($_POST['subject'] == 3) {
+     $subject = 'Поделиться на ноль';
+   } else {
+     $subject = 'Поделиться ничем';
+   } 
+   
+   $to = "ВАША ПОЧТА, КУДА БУДУТ ПРИХОДИТЬ ПИСЬМА";
+   $from = trim($_POST['email']);
+
+   $message = htmlspecialchars($_POST['message']);
+   $message = urldecode($message);
+   $message = trim($message);
+
+   $headers = "From: $from" . "\r\n" . 
+   "Reply-To: $from" . "\r\n" . 
+   "X-Mailer: PHP/" . phpversion();
+
+   if(mail($to, $subject, $message, $headers)) {
+     echo 'Письмо улетело';
+   } else {
+     echo 'Хмм..похоже, нелётная для писем погода';
+   }
+
+?> 
+
+конец кода-->
